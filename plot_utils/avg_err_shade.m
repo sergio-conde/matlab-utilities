@@ -61,13 +61,14 @@ end
 
 % plot error (shade) and average
 out.handle.err = fill(x_vector,[out.avg - out.err fliplr(out.avg + out.err)],...
-    cfg.color_val,'FaceAlpha',cfg.alpha,'EdgeAlpha',cfg.alpha);
+    cfg.color_val,'FaceAlpha',cfg.alpha,'EdgeAlpha',0.1);
 hold on
 out.handle.avg = plot(x_vector(1:length(out.avg)),out.avg,...
     'color',cfg.color_val,...
     'LineWidth',1);
 
 
+% check (and set) input defaults
 function cfg = check_def(cfg)
 
 if ~isfield(cfg,'ydata')
