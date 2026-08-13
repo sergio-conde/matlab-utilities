@@ -18,7 +18,9 @@ function [out_files,file_line] = get_entry(ref_files,fcn_cfg)
 %       file_path: full file path
 %       + one field per level following the name con cfg.level_name input
 %
-% Sergio Conde, Aug 2024. NIN. Willuhn's Lab.
+% Sergio Conde-Ocazionez, August 2024. 
+% Neuromodulation & Behavior Laboratory
+% Netherlands Institute for Neuroscience.
 
 
 req_fields = fieldnames(fcn_cfg);
