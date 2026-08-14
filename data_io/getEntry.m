@@ -1,4 +1,4 @@
-function [selEntry,entryLine] = getEntry(entryList,varargin)
+function [selEntry,requestConfig] = getEntry(entryList,varargin)
 
 % [selEntry,entryLine] = getEntry(entryList,varargin)
 %
@@ -39,11 +39,11 @@ end
 
 % entryList features
 nEntries = height(entryList);
-numEntry = varfun(@isnumeric,trl_list,'OutputFormat','uniform');
+numEntry = varfun(@isnumeric,entryList,'OutputFormat','uniform');
 
 ogRequest = varargin;
-if istruct(ogRequest{1})
-    requestConfig = ogRequest;
+if isstruct(ogRequest{1})
+    requestConfig = ogRequest{1};
 else
     requestConfig = setRequest(ogRequest);
 end
@@ -54,19 +54,17 @@ validFields = entryList.Properties.VariableNames;
 % select valid fields from the request, check contrasts
 requestConfig = checkRequest(requestConfig,validFields);
 
-% % set the contrast information
-% requestConfig = checkContrast(requestConfig);
-
 % select data from each variable
-requestVar = setdiff(fieldnames(requestConfig),'contrast');
+requestVar = setdiff(fieldnames(requestConfig),{'contrast','ignored'});
 
 nVars = length(requestVar);
-varFlags = true(nEntries,nVars);
+varFlags = false(nEntries,nVars);
 for ivar = 1:nVars
     requestLabel = requestVar{ivar};
     requestValue = requestConfig.(requestLabel);
     varData = entryList.(requestLabel);
-    if numEntry(ivar)
+    varNum = ismember(validFields,requestLabel);
+    if numEntry(varNum)
         switch requestConfig.contrast.(requestLabel)
             case 'lower'
                 varFlags(:,ivar) = varData < requestValue;
@@ -82,13 +80,19 @@ for ivar = 1:nVars
         varFlags(:,ivar) = ismember(varData,requestValue);
     end
 end
-pickFlags = all(varFlags,2);
-entryLine = find(pickFlags);
+
+if ~isempty(varFlags)
+    pickFlags = all(varFlags,2); % entries that fully match the request
+else
+    pickFlags = false(nEntries,1);
+end
+requestConfig.entryLine = find(pickFlags);
 
 selEntry = entryList(pickFlags,:);
 if structFlag
     selEntry = table2struct(selEntry);
 end
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function requestConfig = setRequest(ogRequest)
@@ -107,7 +111,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function requestConfig = checkRequest(requestConfig)
+function requestConfig = checkRequest(requestConfig,validFields)
 
 % checkContrast checks and sets the default contrast value ('equal') for 
 % all requested fields
@@ -119,6 +123,8 @@ if ~isempty(invalidFields)
         ' and were ignored: \n%s\n'],...
         strjoin(invalidFields, '\n'));
     requestFields = setdiff(requestFields,invalidFields);
+    requestConfig = rmfield(requestConfig,invalidFields);
+    requestConfig.ignored = invalidFields;
 end
 
 % set the default empty contrast definition if needed
