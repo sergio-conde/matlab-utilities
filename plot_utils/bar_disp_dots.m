@@ -19,9 +19,10 @@ function bar_disp_dots(data,cfg)
 
 hold on
 if isfield(cfg,'transparency')
-    plot_dots(cfg,data)
+    % plot_dots(cfg,data)
     hbar = plot_bars(cfg,data);
     hbar.FaceAlpha = cfg.transparency;
+    plot_dots(cfg,data);
 else
     plot_bars(cfg,data);
     plot_dots(cfg,data);
@@ -56,13 +57,15 @@ if cfg.paired
         plot(x_dots(ipoint,:),data(ipoint,:),'o-',...
             'markersize',4, ...
             'Color', 0.75 * ones(1,3),...
-            'MarkerFaceColor',cfg.dot_color)
+            'MarkerFaceColor',cfg.dot_color,...
+            'MarkerEdgeColor',cfg.dot_color)
     end
 else
     plot(x_dots,data(:),'o',...
         'markersize',4, ...
         'Color', 0.75 * ones(1,3),...
-        'MarkerFaceColor',cfg.dot_color)
+        'MarkerFaceColor',cfg.dot_color, ...
+        'MarkerEdgeColor',cfg.dot_color)
 end
 
 end
