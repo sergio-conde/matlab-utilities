@@ -71,7 +71,7 @@ for ivar = 1:nVars
             case 'higher'
                 varFlags(:,ivar) = varData > requestValue;
             case 'equal'
-                varFlags(:,ivar) = varData == requestValue;
+                varFlags(:,ivar) = ismember(varData,requestValue);
             case 'range'
                 varFlags(:,ivar) = varData > requestValue(1) & ...
                     varData < requestValue(2);
