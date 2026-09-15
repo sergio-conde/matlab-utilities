@@ -1,4 +1,4 @@
-function out = avg_err_shade(cfg)
+function outPrint = avg_err_shade(cfg)
 
 % avg_err_shade function plots the mean trace and shadow dispersion 
 % 
@@ -33,7 +33,7 @@ end
 nvalid = sum(~isnan(cfg.ydata),1);
 
 % check defaults %
- cfg = check_def(cfg);
+ cfg = checkCfg(cfg);
 
 % compute average and standard deviation
 out.avg = mean(cfg.ydata,1,'omitnan');
@@ -67,9 +67,13 @@ out.handle.avg = plot(x_vector(1:length(out.avg)),out.avg,...
     'color',cfg.color_val,...
     'LineWidth',1);
 
+if nargout > 0
+    outPrint = out;
+end
+
 
 % check (and set) input defaults
-function cfg = check_def(cfg)
+function cfg = checkCfg(cfg)
 
 if ~isfield(cfg,'ydata')
     error('Input must have at least the data')
