@@ -14,8 +14,12 @@ function hf = wfig(varargin)
 % Sergio Conde-Ocazionez, 2022.
 
 if nargin == 1
-    hf = figure(varargin{1});
+    h = figure(varargin{1});
 else
-    hf = figure;
+    h = figure;
 end
-set(hf,'color','w')
+set(h,'color','w')
+
+if nargout > 0
+    hf = h;
+end
