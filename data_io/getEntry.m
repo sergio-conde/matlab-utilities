@@ -44,6 +44,8 @@ numEntry = varfun(@isnumeric,entryList,'OutputFormat','uniform');
 ogRequest = varargin;
 if isstruct(ogRequest{1})
     requestConfig = ogRequest{1};
+elseif istable(ogRequest{1})
+    requestConfig = table2struct(ogRequest{1});
 else
     requestConfig = setRequest(ogRequest);
 end
