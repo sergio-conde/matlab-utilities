@@ -55,7 +55,7 @@ for ifile = 1:length(allFiles)
     for ilevel = 1:length(cfg.folderCode)
         fileList(ifile).name = allFiles(ifile).name;                                      % file name
         fileList(ifile).folder = allFiles(ifile).folder;                                  % file folder
-        fileList(ifile).file_path = [allFiles(ifile).folder '\' fileList(ifile).name];   % full file path
+        fileList(ifile).filePath = [allFiles(ifile).folder '\' fileList(ifile).name];   % full file path
         fileList(ifile).(cfg.levelName{ilevel}) = ...
             allFiles(ifile).folder(refPos(ilevel) + 1 : refPos(ilevel + 1) - 1);         % level name
     end
