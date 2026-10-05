@@ -1,4 +1,4 @@
-function out = avg_err_shade(cfg)
+function outPrint = avg_err_shade(cfg)
 
 % avg_err_shade function plots the mean trace and shadow dispersion 
 % 
@@ -8,7 +8,7 @@ function out = avg_err_shade(cfg)
 %           or a struct containing mean_data and std_vectors.
 %   cfg.err_flag: can be 'sem' (standard error fo the mean; 'ci' (95%
 %                 confidence interval) or 'std' (standard deviation)
-%   cfg.color_val: color definition same as Matlab's
+%   cfg.color: color definition same as Matlab's
 %   cfg.alpha:  transparency level
 %
 % Outputs
@@ -33,7 +33,7 @@ end
 nvalid = sum(~isnan(cfg.ydata),1);
 
 % check defaults %
- cfg = check_def(cfg);
+ cfg = checkCfg(cfg);
 
 % compute average and standard deviation
 out.avg = mean(cfg.ydata,1,'omitnan');
@@ -61,15 +61,19 @@ end
 
 % plot error (shade) and average
 out.handle.err = fill(x_vector,[out.avg - out.err fliplr(out.avg + out.err)],...
-    cfg.color_val,'FaceAlpha',cfg.alpha,'EdgeAlpha',0.1);
+    cfg.color,'FaceAlpha',cfg.alpha,'EdgeAlpha',0.1);
 hold on
 out.handle.avg = plot(x_vector(1:length(out.avg)),out.avg,...
-    'color',cfg.color_val,...
+    'color',cfg.color,...
     'LineWidth',1);
+
+if nargout > 0
+    outPrint = out;
+end
 
 
 % check (and set) input defaults
-function cfg = check_def(cfg)
+function cfg = checkCfg(cfg)
 
 if ~isfield(cfg,'ydata')
     error('Input must have at least the data')
@@ -83,8 +87,8 @@ if ~isfield(cfg,'err_ref')
     cfg.err_ref = 'sem';
 end
 
-if ~isfield(cfg,'color_val')
-    cfg.color_val = 'k';
+if ~isfield(cfg,'color')
+    cfg.color = 'k';
 end
 
 if ~isfield(cfg,'alpha')
